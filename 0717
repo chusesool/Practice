@@ -1,0 +1,134 @@
+import random
+from tabulate import tabulate
+
+class YahtzeeGame:
+    def __init__(self):
+        self.scores = {"1s": None, "2s": None, "3s": None, "4s": None, "5s": None, "6s": None,
+                       "three_of_a_kind": None, "four_of_a_kind": None, "full_house": None,
+                       "small_straight": None, "large_straight": None, "yahtzee": None, "chance": None}
+        self.dice = [0] * 5
+        self.rolls_left = 3
+
+    def roll_dice(self, indices=None):
+        if indices is None:
+            indices = range(5)
+        for i in indices:
+            self.dice[i] = random.randint(1, 6)
+        self.rolls_left -= 1
+        print(f"주사위: {self.dice}")
+
+    def score_upper(self, number):
+        return sum(d for d in self.dice if d == number)
+
+    def score_three_of_a_kind(self):
+        for number in set(self.dice):
+            if self.dice.count(number) >= 3:
+                return sum(self.dice)
+        return 0
+
+    def score_four_of_a_kind(self):
+        for number in set(self.dice):
+            if self.dice.count(number) >= 4:
+                return sum(self.dice)
+        return 0
+
+    def score_full_house(self):
+        unique_counts = set(self.dice.count(d) for d in set(self.dice))
+        if unique_counts == {2, 3}:
+            return 25
+        return 0
+
+    def score_small_straight(self):
+        unique_dice = sorted(set(self.dice))
+        straights = [[1, 2, 3, 4], [2, 3, 4, 5], [3, 4, 5, 6]]
+        for straight in straights:
+            if all(num in unique_dice for num in straight):
+                return 30
+        return 0
+
+    def score_large_straight(self):
+        unique_dice = sorted(set(self.dice))
+        if unique_dice == list(range(1, 6)) or unique_dice == list(range(2, 7)):
+            return 40
+        return 0
+
+    def score_yahtzee(self):
+        if len(set(self.dice)) == 1:
+            return 50
+        return 0
+
+    def score_chance(self):
+        return sum(self.dice)
+
+    def choose_category(self):
+        print("점수를 기록할 카테고리를 선택하세요:")
+        for category in self.scores:
+            if self.scores[category] is None:
+                print(category)
+        choice = input("카테고리 이름을 입력하세요: ")
+        return choice
+
+    def score_choice(self, choice):
+        if choice == "1s":
+            return self.score_upper(1)
+        elif choice == "2s":
+            return self.score_upper(2)
+        elif choice == "3s":
+            return self.score_upper(3)
+        elif choice == "4s":
+            return self.score_upper(4)
+        elif choice == "5s":
+            return self.score_upper(5)
+        elif choice == "6s":
+            return self.score_upper(6)
+        elif choice == "three_of_a_kind":
+            return self.score_three_of_a_kind()
+        elif choice == "four_of_a_kind":
+            return self.score_four_of_a_kind()
+        elif choice == "full_house":
+            return self.score_full_house()
+        elif choice == "small_straight":
+            return self.score_small_straight()
+        elif choice == "large_straight":
+            return self.score_large_straight()
+        elif choice == "yahtzee":
+            return self.score_yahtzee()
+        elif choice == "chance":
+            return self.score_chance()
+        else:
+            print("잘못된 선택입니다")
+            return 0
+
+    def display_scores(self):
+        table = [[category, score if score is not None else "-"] for category, score in self.scores.items()]
+        print(tabulate(table, headers=["카테고리", "점수"], tablefmt="grid"))
+
+    def play_turn(self):
+        self.rolls_left = 3
+        self.roll_dice()
+        while self.rolls_left > 0:
+            reroll = input("다시 굴릴 주사위의 인덱스를 입력하세요 (콤마로 구분), 'all'을 입력하여 전부 다시 굴리기, 또는 'keep'을 입력하여 현재 주사위를 유지하세요: ")
+            if reroll == "keep":
+                break
+            if reroll == "all":
+                self.roll_dice()
+            else:
+                indices = [int(i) for i in reroll.split(",")]
+                self.roll_dice(indices)
+
+        choice = self.choose_category()
+        self.scores[choice] = self.score_choice(choice)
+        print(f"{choice}에 {self.scores[choice]} 점을 기록했습니다")
+
+    def play_game(self):
+        print("야추 게임에 오신 것을 환영합니다!")
+        for _ in range(13):
+            self.play_turn()
+            self.display_scores()
+
+        total_score = sum(score for score in self.scores.values() if score is not None)
+        print(f"최종 점수: {total_score}")
+
+if __name__ == "__main__":
+    game = YahtzeeGame()
+    game.play_game()
