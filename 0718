@@ -1,0 +1,24 @@
+import turtle
+
+def draw_circle(x, y, radius, color, width):
+    turtle.penup()
+    turtle.goto(x, y - radius)
+    turtle.pendown()
+    turtle.color(color)
+    turtle.width(width)
+    turtle.circle(radius)
+
+def draw_olympic_rings():
+    turtle.speed(1)
+    draw_circle(-110, 0, 50, "blue", 3)
+    draw_circle(0, 0, 50, "black", 3)
+    draw_circle(110, 0, 50, "red", 3)
+    draw_circle(-55, -50, 50, "yellow", 3)
+    draw_circle(55, -50, 50, "green", 3)
+    turtle.hideturtle()
+    turtle.done()
+
+# 함수 호출
+draw_olympic_rings()
+
+
