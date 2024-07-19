@@ -1,0 +1,11 @@
+# 주어진 리스트
+lis_int = [2024, ['금', 'python'], '오후1시']
+
+# 'python'을 포함한 리스트의 두 번째 요소를 변경
+for i in range(len(lis_int)):
+    if isinstance(lis_int[i], list):  # 리스트 내의 리스트를 찾기
+        for j in range(len(lis_int[i])):
+            if isinstance(lis_int[i][j], str) and 'p' in lis_int[i][j]:  # 문자열 내의 'p'를 찾기
+                lis_int[i][j] = lis_int[i][j].replace('p', 'u')  # 'p'를 'u'로 변경
+
+print(lis_int)
