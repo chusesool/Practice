@@ -1,0 +1,19 @@
+account_number = input("계좌번호를 입력하세요 (하이픈 없이 입력해 주세요): ")
+
+hihi = ""
+
+for x in account_number:
+    if x == '-':
+        continue
+    hihi += x
+print(hihi)
+
+
+
+---
+accum = 0
+for i in range(1,101):
+    if i % 2:
+        continue
+    accum += i
+print(accum)
