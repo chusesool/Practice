@@ -1,0 +1,34 @@
+def print_sum(*nums, sumfmt = "전체합은 %d"):
+    sum = 0
+    for n in nums:
+        sum += n
+    print(sumfmt % sum)
+print_sum()
+print_sum(1,2,3,4,5)
+print_sum(1,2,3,4, sumfmt = '합은? %d')
+
+---
+
+def square(n):
+    return n*n   
+lst = [1,2,3,4]
+lst2 = map(square, lst)
+sq_lst = list(lst2)
+print(sq_lst)
+print(lst2)
+
+---
+
+from calendar import *
+cal = month(3001, 7)
+cal2 = month(2034, 7)
+print(cal)
+print(cal2)
+
+---
+
+def get_multiple_values():
+    return 1, 2, 3
+
+a, b, c = get_multiple_values()
+print(a, b)  # 출력: 1 2 3
