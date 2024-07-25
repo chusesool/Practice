@@ -1,0 +1,33 @@
+import numpy as np
+
+# 데이터 생성
+data = [10, 20, 30, 40, 50]
+
+# NumPy 배열로 변환
+np_data = np.array(data)
+
+# 평균 계산
+mean = np.mean(np_data)
+
+# 각 데이터 포인트와 평균의 차이 제곱의 평균 구하기
+squared_diff = (np_data - mean) ** 2
+mean_squared_diff = np.mean(squared_diff)
+
+# 표준편차 계산
+std_dev_manual = np.sqrt(mean_squared_diff)
+
+print("Data:", np_data)
+print("Mean:", mean)
+print("Squared Differences:", squared_diff)
+print("Mean of Squared Differences:", mean_squared_diff)
+print("Manual Standard Deviation:", std_dev_manual)
+
+
+----
+
+from tabulate import tabulate
+df = pd.DataFrame(np.arange(1,21).reshape(4,5),
+                  columns=['c1', 'c2', 'c3', 'c4', 'c5'],
+                  index=['i1', 'i2', 'i3', 'i4'])
+df = df.loc[['i1', 'i3', 'i2'], ['c3', 'c4', 'c1', 'c2']]
+print(tabulate(df, headers='keys', tablefmt='fancy_outline'))
