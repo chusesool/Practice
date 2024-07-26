@@ -1,0 +1,31 @@
+import pandas as pd
+import networkx as nx
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 데이터 로드
+titanic = sns.load_dataset('titanic')
+
+# 'sibsp'와 'parch'를 사용하여 가족 그룹 식별
+titanic['family_size'] = titanic['sibsp'] + titanic['parch'] + 1
+
+# 가족 그룹이 있는 경우 그룹 ID 할당
+titanic['family_id'] = titanic.apply(lambda row: f"{row['sibsp']}_{row['parch']}" if row['family_size'] > 1 else 'No_Family', axis=1)
+
+# 네트워크 그래프 생성
+G = nx.Graph()
+
+for idx, row in titanic.iterrows():
+    if row['family_id'] != 'No_Family':
+        G.add_node(idx, survived=row['survived'])
+        family_members = titanic[titanic['family_id'] == row['family_id']].index
+        for member in family_members:
+            if member != idx:
+                G.add_edge(idx, member)
+
+# 생존자와 희생자를 다른 색상으로 표시
+color_map = ['green' if G.nodes[node]['survived'] == 1 else 'red' for node in G]
+
+plt.figure(figsize=(12, 8))
+nx.draw(G, node_color=color_map, with_labels=False, node_size=50)
+plt.show()
