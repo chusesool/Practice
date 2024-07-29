@@ -1,0 +1,50 @@
+import pandas as pd
+import folium as fo
+from folium.plugins import HeatMap
+
+passenger = pd.read_csv('지하철승객수.csv')
+passenger.head()
+station = pd.read_csv('지하철역정보.csv')
+station.head()
+
+people = passenger.groupby('station_code').sum()
+location = station[['station.code','geo.latitude','geo.longitude']]
+location = location.set_index('station.code')
+datamart= people.join(location)
+datamart
+
+import folium as fo
+metro_map = fo.Map(location=[37.4979, 127.0276], zoom_start=12)
+metro_map
+
+people_in= datamart[['geo.latitude','geo.longitude','people_in']]
+HeatMap(people_in).add_to(metro_map)
+metro_map
+
+people_out= datamart[['geo.latitude','geo.longitude','people_out']]
+HeatMap(people_out).add_to(metro_map)
+metro_map
+
+passenger_09= passenger[pd.to_datetime(passenger.timestamp).dt.hour<9]
+datamart_09= passenger_09.groupby('station_code').sum()
+datamart_09= datamart_09.join(location)
+
+passenger_17= passenger[pd.to_datetime(passenger.timestamp).dt.hour>17]
+datamart_17= passenger_17.groupby('station_code').sum()
+datamart_17= datamart_17.join(location)
+
+people_in= datamart_09[['geo.latitude','geo.longitude','people_in']]
+HeatMap(people_in).add_to(metro_map)
+metro_map
+
+people_out= datamart_09[['geo.latitude','geo.longitude','people_out']]
+HeatMap(people_out).add_to(metro_map)
+metro_map
+
+people_in= datamart_09[['geo.latitude','geo.longitude','people_in']]
+HeatMap(people_in).add_to(metro_map)
+metro_map
+
+people_out= datamart_17[['geo.latitude','geo.longitude','people_in']]
+HeatMap(people_out).add_to(metro_map)
+metro_map
