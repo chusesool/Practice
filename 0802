@@ -1,0 +1,18 @@
+시간별 매출 비교
+
+df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
+
+# 'InvoiceDate'에서 시간을 추출
+df['hour'] = df['InvoiceDate'].dt.hour
+
+# 시간을 기준으로 그룹화하고 총 매출 금액을 계산
+df_amount_by_hour = df.groupby('hour')['amount'].sum().reset_index()
+
+# 시간별 매출을 시각화하는 바 차트 생성
+fig = px.bar(df_amount_by_hour, x='hour', y='amount', color_discrete_sequence=px.colors.qualitative.T10)
+
+# 레이아웃에 제목 추가
+fig.update_layout(title='시간별 매출 비교')
+
+# 차트 표시
+fig.show()
